@@ -1,11 +1,14 @@
 import numpy as np
+import time  # Import time module
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
 
 class PointLocationStructure:
     def __init__(self, points):
+        start_time = time.time()  # Start timing
         self.points = points
         self.triangulation = Delaunay(points)
+        self.triangulation_time = time.time() - start_time  # Calculate elapsed time
 
     def locate_point(self, query_point):
         simplex = self.triangulation.find_simplex(query_point)
@@ -42,6 +45,9 @@ if __name__ == "__main__":
     query_point = generate_query_point_inside(points)
 
     pls = PointLocationStructure(points)
+
+    print(f"Time taken to generate Delaunay triangulation: {pls.triangulation_time:.6f} seconds")
+
     result = pls.locate_point(query_point)
 
     plt.figure(figsize=(10, 10))
@@ -59,4 +65,3 @@ if __name__ == "__main__":
     plt.legend()
     plt.gcf().canvas.mpl_connect("scroll_event", on_scroll)  # Bind scroll wheel event
     plt.show()
-
